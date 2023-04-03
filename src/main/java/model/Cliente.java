@@ -1,6 +1,8 @@
 package model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -13,7 +15,18 @@ public class Cliente {
     private int id;
     private String nomecliente;
 
-    public int getId() {
+    @OneToMany(mappedBy = "cliente")
+    private List<Cliente> clientecontasareceber = new ArrayList<>();
+
+  public List<Cliente> getClientecontasareceber() {
+    return clientecontasareceber;
+  }
+
+  public void setClientecontasareceber(List<Cliente> clientecontasareceber) {
+    this.clientecontasareceber = clientecontasareceber;
+  }
+
+  public int getId() {
         return id;
     }
 
