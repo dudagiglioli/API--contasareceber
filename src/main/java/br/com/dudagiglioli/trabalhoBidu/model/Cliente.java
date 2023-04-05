@@ -1,4 +1,4 @@
-package model;
+package br.com.dudagiglioli.trabalhoBidu.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,19 +12,11 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private int id;
+    private Integer id;
     private String nomecliente;
 
     @OneToMany(mappedBy = "cliente")
-    private List<Cliente> clientecontasareceber = new ArrayList<>();
-
-  public List<Cliente> getClientecontasareceber() {
-    return clientecontasareceber;
-  }
-
-  public void setClientecontasareceber(List<Cliente> clientecontasareceber) {
-    this.clientecontasareceber = clientecontasareceber;
-  }
+    private List<ContasAReceber> clientecontasareceber = new ArrayList<>();
 
   public int getId() {
         return id;

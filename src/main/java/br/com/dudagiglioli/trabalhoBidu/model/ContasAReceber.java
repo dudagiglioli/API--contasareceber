@@ -1,4 +1,4 @@
-package model;
+package br.com.dudagiglioli.trabalhoBidu.model;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -13,25 +13,28 @@ public class ContasAReceber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @OneToMany
-    //relaciona - junta as tabelas
-    @JoinColumn(name = "idcliente")
+    @ManyToOne
+    @JoinColumn(name= "idcliente")
     private Cliente cliente;
 
-    @ManyToOne
-    @JoinColumn(name= "idcontasareceber")
-    private ContasAReceber contasareceber;
-
-    private int id;
+    private Integer id;
     private Date data;
     private BigDecimal valorconta ;
-    private int idcliente;
+    private Integer idcliente;
 
-    public int getId() {
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -51,11 +54,11 @@ public class ContasAReceber {
         this.valorconta = valorconta;
     }
 
-    public int getIdcliente() {
+    public Integer getIdcliente() {
         return idcliente;
     }
 
-    public void setIdcliente(int idcliente) {
+    public void setIdcliente(Integer idcliente) {
         this.idcliente = idcliente;
     }
 
@@ -64,11 +67,12 @@ public class ContasAReceber {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ContasAReceber that = (ContasAReceber) o;
-        return id == that.id && idcliente == that.idcliente;
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, idcliente);
+        return Objects.hash(id);
     }
 }
+
