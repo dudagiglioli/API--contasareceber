@@ -1,6 +1,7 @@
 package br.com.dudagiglioli.trabalhoBidu.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
@@ -13,14 +14,14 @@ public class ContasAReceber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
+    private Integer id;
+    private Date data;
+    private BigDecimal valorconta;
+
     @ManyToOne
     @JoinColumn(name= "idcliente")
     private Cliente cliente;
 
-    private Integer id;
-    private Date data;
-    private BigDecimal valorconta ;
-    private Integer idcliente;
 
     public Cliente getCliente() {
         return cliente;
@@ -54,13 +55,6 @@ public class ContasAReceber {
         this.valorconta = valorconta;
     }
 
-    public Integer getIdcliente() {
-        return idcliente;
-    }
-
-    public void setIdcliente(Integer idcliente) {
-        this.idcliente = idcliente;
-    }
 
     @Override
     public boolean equals(Object o) {

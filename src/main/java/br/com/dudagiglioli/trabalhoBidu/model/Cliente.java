@@ -1,5 +1,7 @@
 package br.com.dudagiglioli.trabalhoBidu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ public class Cliente {
     private Integer id;
     private String nomecliente;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<ContasAReceber> clientecontasareceber = new ArrayList<>();
 
