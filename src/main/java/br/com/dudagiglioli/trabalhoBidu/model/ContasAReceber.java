@@ -3,6 +3,7 @@ package br.com.dudagiglioli.trabalhoBidu.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class ContasAReceber {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Integer id;
-    private Date data;
+    private LocalDate data;
     private BigDecimal valorconta;
 
     @ManyToOne
@@ -39,11 +40,11 @@ public class ContasAReceber {
         this.id = id;
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
