@@ -2,8 +2,9 @@ package br.com.dudagiglioli.trabalhoBidu.repository.ContasAReceber;
 
 import br.com.dudagiglioli.trabalhoBidu.model.ContasAReceber;
 import br.com.dudagiglioli.trabalhoBidu.repository.Filter.ContasAReceberFilter;
+import br.com.dudagiglioli.trabalhoBidu.repository.projections.ContasAReceberDTO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
@@ -22,47 +23,41 @@ public class ContasAReceberRepositoryImpl implements ContasAReceberRepositoryQue
     private EntityManager manager;
 
     @Override
-    public Page<ContasAReceber> Filtrar(ContasAReceberFilter contasAReceberFilter, Pageable pageable) {
-
+    public Page<ContasAReceber> Filtrar(ContasAReceberFilter contasAReceberFilter, Pageable pageable){
         CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<ContasAReceber> criteria = builder.createQuery((ContasAReceber.class));
+        CriteriaQuery<ContasAReceberDTO> criteria = builder.createQuery((ContasAReceberDTO.class));
         Root<ContasAReceber> root = criteria.from((ContasAReceber.class));
 
-        Predicate[] predicates = criarRestricoes(contasAReceberFilter, builder, root);
-        criteria.where(predicates);
-        criteria.orderBy(builder.desc(root.get("data")));
-
-        TypedQuery<ContasAReceber> query = manager.createQuery(criteria);
-
-        return new PageImpl<>(query.getResultList(), pageable, totaldepaginas(contasAReceberFilter));
-    }
-
-    private Long totaldepaginas(ContasAReceberFilter contasAReceberFilter) {
-        CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-        Root<ContasAReceber> root = criteria.from(ContasAReceber.class);
+        criteria.select(builder.construct(ContasAReceberDTO.class,
+                root.get("id"),
+                root.get("data"),
+                root.get("valorconta"),
+                root.get("cliente").get("nomecliente")
+                ));
 
         Predicate[] predicates = criarRestricoes(contasAReceberFilter, builder, root);
         criteria.where(predicates);
         criteria.orderBy(builder.desc(root.get("data")));
 
-        criteria.select(builder.count(root));
-
-        return  manager.createQuery(criteria).getSingleResult();
+        TypedQuery<ContasAReceberDTO> query = manager.createQuery(criteria);
+        addrestricoesdepaginacao(query, pageable);
+        
+        return null;
     }
 
-    private void addrestricoesdepaginacao(TypedQuery<ContasAReceber> query, Pageable pageable){
-        int paginaatual = pageable.getPageNumber();
-        int totalresgistros = pageable.getPageSize();
-        int primeiroregistrodepagina = paginaatual * totalresgistros;
+    private void addrestricoesdepaginacao(TypedQuery<?> query, Pageable pageable) {
+        int pagatual = pageable.getPageNumber();
+        int totalderestricoesporpag = pageable.getPageSize();
+        int primeiroregistropag = pagatual * totalderestricoesporpag;
 
-        query.setFirstResult(primeiroregistrodepagina);
-        query.setMaxResults(totalresgistros);
+        query.setFirstResult(primeiroregistropag);
+        query.setMaxResults(totalderestricoesporpag);
     }
 
     private Predicate[] criarRestricoes(ContasAReceberFilter contasAReceberFilter, CriteriaBuilder builder, Root<ContasAReceber> root) {
 
         List<Predicate> predicates = new ArrayList<>();
+
 
         if(contasAReceberFilter.getValorconta() != null){
             predicates.add(builder.equal(root.get("valorconta"), contasAReceberFilter.getValorconta()));
@@ -70,9 +65,15 @@ public class ContasAReceberRepositoryImpl implements ContasAReceberRepositoryQue
         if(contasAReceberFilter.getData() != null){
             predicates.add(builder.greaterThanOrEqualTo(root.get("data"), contasAReceberFilter.getData()));
         }
-
+        if (!StringUtils.isEmpty(contasAReceberFilter.getN)) {
+            predicates.add(builder.like(builder.lower(root.get("cliente").get("nomecliente")),
+                    "%" + contasAReceberFilter..toLowerCase() + "%"
+            ));
+        }
 
         return predicates.toArray(new Predicate[predicates.size()]);
+
+
 
     }
 }
