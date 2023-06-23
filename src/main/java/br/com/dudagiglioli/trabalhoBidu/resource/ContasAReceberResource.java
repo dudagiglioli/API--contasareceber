@@ -1,10 +1,9 @@
 package br.com.dudagiglioli.trabalhoBidu.resource;
 
-import br.com.dudagiglioli.trabalhoBidu.model.Cliente;
 import br.com.dudagiglioli.trabalhoBidu.model.ContasAReceber;
 import br.com.dudagiglioli.trabalhoBidu.repository.ContasAReceberRepository;
-import br.com.dudagiglioli.trabalhoBidu.repository.Filter.ClienteFilter;
 import br.com.dudagiglioli.trabalhoBidu.repository.Filter.ContasAReceberFilter;
+import br.com.dudagiglioli.trabalhoBidu.repository.projections.ContasAReceberDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,7 @@ public class ContasAReceberResource {
     private ContasAReceberRepository contasAReceberRepository;
 
     @GetMapping
-    public Page<ContasAReceber> pesquisar(ContasAReceberFilter contasAReceberFilter, Pageable pageable){
+    public Page<ContasAReceberDTO> pesquisar(ContasAReceberFilter contasAReceberFilter, Pageable pageable){
 
         return contasAReceberRepository.Filtrar(contasAReceberFilter, pageable);
 
